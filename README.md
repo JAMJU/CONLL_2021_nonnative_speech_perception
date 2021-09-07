@@ -10,7 +10,7 @@ The stimuli (extracted wav files and source files) and human results (Human expe
 TO ADD
 
 #### Computing the overlap scores
-
+TO ADD
 
 ## Getting models' delta values
 #### Models' representations
@@ -33,7 +33,7 @@ Put the files in the extract_from_wav2vec directory in the fairseq git directory
 
 Modify the script `extract_wav2vec_layers.py` following the instructions in the comments.
 
-Simply do ()in the fairseq directory):
+Simply do (in the fairseq directory):
 
 `python extract_wav2vec_alyers.py` 
 
@@ -53,10 +53,26 @@ Where `folder_results` is the folder where all the delta values files are, `$fil
 ## How to compare the predictors ?
 ### Log-likelihood
 ##### Simple
+`python simple_probit_model.py $predictor_file $out_file $french $english`
+
+With `$french` equals to True if you want to test the predictors on the French participant results, and same for `$english` for English participants
+`$outfile` will contain the log likelihood values obtained from the predictors that are in the predictor file, one column per predictor.
 ##### Bootstrap
+`python bootstrap_probit_model.py $predictor_file $out_file $nb_it $french $english`
+
+Same than for the simple probit model, but with `nb_it` the number of iteration of bootstrapping you want to do.
+You need to precise in the file how many cpu are available for the computation.
 ### Spearman correlation
 ##### Simple
+`python simple_spearman_correlation.py $predictor_file $outfile`
+
+Where `$outfile` will contain the spearman correlation btained by all the predictor values in `predictr_file`
+
+
 ##### Bootstrap
+`python bootstrap_spearman_correlation.py $predictor_file $nb_it $outfile`
+
+Same than for the simple spearman correlation but using bootstraping, you need to precise the number of iteration needed by choosing `$nb_it`
 
 
 
