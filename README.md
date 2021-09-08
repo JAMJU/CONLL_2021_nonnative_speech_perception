@@ -2,15 +2,16 @@
 This git contains all the code and informations needed to reproduce the resuts of the following paper:
 
 ## Getting the discrimination task data results
-The stimuli (extracted wav files and source files) and human results (Human experiments file) for the discrimination task are available under the name WorldVowels on the Perceptimatic dataset website, you can download them here : https://docs.cognitive-ml.fr/perceptimatic/Downloads/downloads.html#perceptimatic-dataset-files
-
+The stimuli (extracted wav files and source files) for the discrimination task are available under the name WorldVowels on the Perceptimatic dataset website, you can download them here : https://docs.cognitive-ml.fr/perceptimatic/Downloads/downloads.html#perceptimatic-dataset-files. Be careful, the extracted and source wav files are sampled at 16000Hz. The discrimination task results are also available on the website, but we need a specific format of them for our code to work, so they are available in the file `data/discrimination_results.csv` 
 
 ## Overlap score
 #### Getting the assimilation task results
-TO ADD
+The stimuli used for the assimilation task are available in the same folder than the discrimination task stimuli. The participants results are available in `data/assimilation_results.csv`
 
 #### Computing the overlap scores
-TO ADD
+Once you have the humans' assimilation file and the discrimination file, you can start creating a predictor file, by first computing the overlap score:
+
+`python add_overlap_score.py $discrimination_file $assimilation_file $predictor_file`
 
 ## Getting models' delta values
 #### Models' representations
@@ -35,7 +36,7 @@ Modify the script `extract_wav2vec_layers.py` following the instructions in the 
 
 Simply do (in the fairseq directory):
 
-`python extract_wav2vec_alyers.py` 
+`python extract_wav2vec_layers.py` 
 
 #### Computing delta values
 To compute delta values, you need to use the script `compute_distances_from_representations.py`
@@ -51,6 +52,8 @@ Once the delta values for all the models are computed, you can add them to the g
 Where `folder_results` is the folder where all the delta values files are, `$file_in` is the predictor file created above, and `$file_out` is the final predictor file.
 
 ## How to compare the predictors ?
+A file with all predictor values is already available in the git (`data/predictor_file_complete.csv`), otherwise you can create it by using the previous steps.
+
 ### Log-likelihood
 ##### Simple
 `python simple_probit_model.py $predictor_file $out_file $french $english`
@@ -66,14 +69,24 @@ You need to precise in the file how many cpu are available for the computation.
 ##### Simple
 `python simple_spearman_correlation.py $predictor_file $outfile`
 
-Where `$outfile` will contain the spearman correlation btained by all the predictor values in `predictr_file`
+Where `$outfile` will contain the spearman correlation obtained by all the predictor values in `predictr_file`
 
 
 ##### Bootstrap
 `python bootstrap_spearman_correlation.py $predictor_file $nb_it $outfile`
 
 Same than for the simple spearman correlation but using bootstraping, you need to precise the number of iteration needed by choosing `$nb_it`
+You need to precise in the file how many cpu are available for the computation.
 
+## Native effect evaluation
+#### Simple
+`python simple_native_effect.py $predictor_file $english_value $french_value $to_put_to_neg`
 
+to_put_to_neg needs to be True for the overlap score.
+
+#### Bootstrap
+
+`python bootstrap_native_effect.py $predictor_file`
+This only works with a complete file of predictors (containing the overlap, wav2vec delta values and dpgmm delta values)
 
 
